@@ -7,12 +7,19 @@ function [Theta] = normal_equation(FeatureMatrix, Y, tol, iter)
 
   % Theta -> the vector of weights
   A = FeatureMatrix' * FeatureMatrix;
-  eigs = eig(A);
-  if (all(eigs > 0) == 0)
-    Theta = zeros(rows(Y), 1);
+
+  % Check if A is a positive definite matrix.
+  if (all(eig(A) > 0) == 0)
+    Theta = zeros(rows(A), 1);
     Theta = [0; Theta];
     return;
   endif
-  Theta = conjugate_gradient(A, FeatureMatrix' * Y, zeros(rows(Y), 1), tol, iter);
+
+  % Get Theta using conjugate gradient.
+  Theta = conjugate_gradient(A, FeatureMatrix' * Y,
+            zeros(columns(FeatureMatrix), 1), tol, iter);
+  
+  % Add bias.
   Theta = [0; Theta]; 
+
 endfunction

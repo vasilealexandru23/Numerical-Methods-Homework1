@@ -11,7 +11,7 @@ function [X_train, y_train, X_test, y_test] = split_dataset(X, y, percent)
   %           -> X_test will have the other 150 examples
 
 % Get permutations of columns.
-shuffled_indices = randperm(columns(X))
+shuffled_indices = randperm(columns(X));
 
 % Rearange X and y by the previous permutation.
 X = X(shuffled_indices, :);

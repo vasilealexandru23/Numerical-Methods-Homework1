@@ -24,6 +24,7 @@ function [Link] = get_link_matrix(Labyrinth)
         Link(line, col) = 1 / neighbours;
       endif
     endfor
+
   endfor
 
  endfunction

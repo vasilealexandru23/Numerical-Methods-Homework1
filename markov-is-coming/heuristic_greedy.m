@@ -16,10 +16,10 @@ function [path] = heuristic_greedy(start_position, probabilities, Adj)
   % Run dfs.
   while 1
     % Extract the top of the stack and mark as visited.
-    curr_cell = path(end)
+    curr_cell = path(end);
     visited(curr_cell) = 1;
 
-    % Check if we are in WIN cell.
+    % Check if we are adjacent to WIN cell.
     if (Adj(curr_cell, lines - 1) == 1)
       path = [path, lines - 1];
       path = path';
