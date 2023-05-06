@@ -15,9 +15,9 @@ function [J, grad] = cost_function(params, X, y, lambda, ...
   % These will be used for optimization using fmincg
   
   % Initialize data (get Theta1, Theta2 from params and theta).
-  Theta1 = reshape(params(1:hidden_layer_size * (input_layer_size + 1))
+  Theta1 = reshape(params(1:hidden_layer_size * (input_layer_size + 1)), ...
                    hidden_layer_size, (input_layer_size + 1));
-  Theta2 = reshape(params((1 + (hidden_layer_size * (input_layer_size + 1))):end),
+  Theta2 = reshape(params((1 + (hidden_layer_size * (input_layer_size + 1))):end), ...
                    output_layer_size, (hidden_layer_size + 1));
   theta = [Theta1(:); Theta2(:)];
 
@@ -28,26 +28,38 @@ function [J, grad] = cost_function(params, X, y, lambda, ...
   z3 = Theta2 * a2;
   a3 = sigmoid(z3);
 
-  Y = eye(rows(a3))(y,:)
+  m = rows(X);
+  Y = eye(rows(a3))(:,y);
 
   % Get the cost function using the proper formula (part I).
-  J = sum(sum(-Y * log(a3) - (1 - Y) * log(1 - a3))) / rows(X);
+  J = sum(sum(-Y .* log(a3) - (ones(size(Y)) - Y) .* ...
+          log(ones(size(a3)) - a3))) / m;
+
+  % Initialize bigdelta1 and bigdelta2.
+  bigdelta1 = zeros(rows(Theta1), columns(Theta1));
+  bigdelta2 = zeros(rows(Theta2), columns(Theta2));
 
   % Determine the gradients (accumulate them).
-  delta3 = a3 - Y';
-  bigdelta2 = delta3 * a2';
-  delta2 = delta3' * Theta2(:,2:end) * (sigmoid(z2) * sigmoid(ones(rows(z2), columns(z2)) - z2)');
-  bigdelta1 = delta2' * a1';
+  for i = 1 : m
+    delta3 = a3(:, i) - Y(:, i);
+    bigdelta2 = bigdelta2 + delta3 * a2(:, i)';
+    delta2 = (Theta2' * delta3) .* (a2(:,i) .* (ones(size(a2(:, i))) - a2(:, i)));
+    % Remove bias.
+    delta2(1) = [];
+    bigdelta1 = bigdelta1 + delta2 * a1(:, i)';
+  endfor
   
   % Compute some auxiliars sums for the cost function.
   aux1 = sum(sum(Theta1(:, 2:end) .* Theta1(:, 2:end)));
   aux2 = sum(sum(Theta2(:, 2:end) .* Theta2(:, 2:end)));
 
   % Get the cost function using the proper formula (part II).
-  J += (lambda / (2 * rows(X))) * (aux1 + aux2);
+  J += (lambda / (2 * m)) * (aux1 + aux2);
 
-  bigdelta1 = bigdelta1 ./ rows(X) + Theta1 .* (lambda / rows(X));
-  bigdelta2 = bigdelta2 ./ rows(X) + Theta2 .* (lambda / rows(X));
+  bigdelta1 = bigdelta1 ./ m;
+  bigdelta2 = bigdelta2 ./ m;
+  bigdelta1(:, 2:end) += Theta1(:, 2:end) .* (lambda / m);
+  bigdelta2(:, 2:end) += Theta2(:, 2:end) .* (lambda / m);
 
   % Get grad.
   grad = [bigdelta1(:) ; bigdelta2(:)];
