@@ -42,15 +42,72 @@ direction with the highest probability to get the robot out of the maze.
 * Task 2 consists in the manipulation of predictions and errors that can appear
 in the computational processing of a multiple linear regression used in
 determining some predictions regarding the price of some apartments.
-    * 
+    * **parse_data_set_file(file_path)** : Function that receives the
+    relative path to a text file from where we load the data and store it
+    in a cell matrix.
+    * **prepare_for_regression(InitialMatrix)** : Function that receives the
+    InitialMatrix and converts it into the FeatureMatrix. We just iterate
+    through the matrix and build our FeatureMatrix as the statement says.
+    * **linear_regression_cost_function(Theta, Y, FeatureMatrix)** : Function
+    that receives the vector of weights, the vector of all actual values
+    and the FeatureMatirix (the matrix with all training examples) and returns
+    the cost. We just apply the formula for the cost function.
+    * **parse_csv_file(file_path)** : Function that receives the relative path
+    to a csv file and returns a vector with values and the InitiaMatrix.
+    We read the first line to determine how many columns the matrix will have.
+    Than we read the whole input and start building Y and InitialMatrix by
+    iterating over the input (which is a big column cell vector) from where
+    we extract the proper data.
+    * **gradient_descent(FeatureMatrix, Y, n, m, alpha, iter)** : Function that
+    computes the vector of weights which performs a step depending on the
+    gradient of the cost function and the value chosen for the learning rate.
+    For implementation we iterate over the number of trainings and recompute
+    Theta every step with the given formula.
+    * **normal_equation(FeaturesMatrix, Y, tol, iter)** : Function that
+    returns the vector of weights, this time computed with the conjugate
+    gradient. For implementation we first check for the A matrix to be
+    positive definite and then apply the given conjugate gradient algorithm.
+    * **lasso_regression_cost_function(Theta, Y, FeMatrix, lambda)** : Function
+    that receives the vector of weights, the vector of all actual values
+    , the FeatureMatirix (the matrix with all training examples), lambda and
+    returns the cost. We just apply the formula for the cost function.
+    * **ridge_regression_cost_function(Theta, Y, FeMatrix, lambda)** : Function
+    that receives the vector of weights, the vector of all actual values
+    , the FeatureMatirix (the matrix with all training examples), lambda and
+    returns the cost. We just apply the formula for the cost function. This
+    function compute what we want in a better complexity than the previous one.
+
+
 #
 
-### Task2 - MNIST 101
+### Task3 - MNIST 101
 #### Description:
 * Task 3 proposes the classification of pictures that contain handwritten
 decimal digits (from 0 to 9) using a classification model, where each picture
 is represented by a matrix in gray-scale format with a fixed format (20 x 20).
 The chosen classifier is a small neural network that contains 3 layers
 (input, hidden & output).
-
+    * **load_dataset(path)** : The load_dataset function receives a relative
+    path to a .mat file and loads that file into memory, returning the matrix
+    that contains the examples used for training and for the test.
+    * **split_dataset(X, y, percent)** : The split dataset function receives a
+    dataset, and splits the dataset into 2 sets: a training set and a test set.
+    To mix the data we generate a random permutation of columns and than
+    we shuffle the data. Than we extract from it the percent given by function
+    and build the dataset for training and test and the coresponding labels.
+    * **initialize_weights(L_prev, L_next)** : This function returns a matrix
+    with random elements in the interval (-eps, eps). It's a very easy function
+    because the rand function returns values between 0 and 1 so by multiplying
+    those values with eps gives the interval that we want.
+    * **cost_function(params, X, y, lambda, input_layer_size,
+    hidden_layer_size, output_layer_size)** : This function receives as
+    parameters the data about our neural network and returns the cost and the
+    accumulated gradients. It is done by first computing forward propagation,
+    than computing J which is the cost function for the given parameters, and
+    than computing and accumulating the gradients.
+    * **predict_classes(X, weights, input_layer_size,
+    hidden_layer_size, output_layer_size)** : The final function, which returns
+    the predictions on the tests given as a parameter, again using forward
+    propagation and taking from the output vector of 10 elements the number
+    with the highest activation.
 #

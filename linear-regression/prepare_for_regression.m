@@ -2,11 +2,13 @@ function [FeatureMatrix] = prepare_for_regression(InitialMatrix)
   % InitialMatrix -> the matrix that must be transformed
 
   % FeatureMatrix -> the matrix with all training examples
-  
+
+  % Initialize FeatureMatrix. 
   [m n] = size(InitialMatrix);
   FeatureMatrix = zeros(m, n + 1);
     for i = 1 : m
       for j = 1 : n
+      % Build FeatureMatrix.
       if (strcmp(InitialMatrix{i, j}, "yes") == 1)
         FeatureMatrix(i, j) = 1;
       elseif (strcmp(InitialMatrix{i, j}, "no") == 1)

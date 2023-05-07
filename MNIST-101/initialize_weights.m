@@ -3,5 +3,6 @@ function [matrix] = initialize_weights(L_prev, L_next)
   % L_next -> the number of units in the next layer
 
   % matrix -> the matrix with random values
-  matrix = zeros(L_next, L_prev + 1);
+  eps = sqrt(6) / sqrt(L_prev + L_next);
+  matrix = rand(L_next, L_prev + 1) .* eps;
 endfunction
